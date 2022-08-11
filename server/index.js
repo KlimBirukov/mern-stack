@@ -1,1 +1,19 @@
-const b = 10;
+import express from 'express';
+import mongoose from "mongoose";
+
+
+mongoose
+    .connect('mongodb+srv://Klim:qwerty123@cluster0.ulzfixj.mongodb.net/blog?retryWrites=true&w=majority')
+    .then(() => console.log('DB is connected.'))
+    .catch((err) => console.log('DB error: ', err))
+
+
+const app = express()
+app.use(express.json)
+
+app.listen(4444, (err) => {
+    if(err) {
+        return console.log(err)
+    }
+    console.log('Server is working.')
+})

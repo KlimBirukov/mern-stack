@@ -6,7 +6,7 @@
   "type": "module",
   "//": "для подключения с помощью import/export",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
