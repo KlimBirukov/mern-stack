@@ -7,9 +7,8 @@ export const create = async (req, res) => {
             text: req.body.text,
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
-            author: req.UserId,
+            author: req.userId,
         });
-
         const post = await doc.save()
         res.json(post)
     } catch (err) {
