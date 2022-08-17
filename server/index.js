@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from "mongoose";
 
-import {registerValidation} from "./validators/auth.js";
+import {registerValidation, loginValidation} from "./validators/auth.js";
 import checkAuth from "./utils/checkAuth.js";
 import * as UserController from "./controllers/UserController.js";
 
@@ -23,5 +23,5 @@ app.listen(4444, (err) => {
 })
 
 app.post('/auth/register', registerValidation, UserController.register)
-app.post('/auth/login', UserController.login)
+app.post('/auth/login', loginValidation, UserController.login)
 app.get('/auth/me', checkAuth, UserController.getMe)
