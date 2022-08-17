@@ -5,7 +5,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import {registerValidation} from "./validators/auth.js";
-import UserModel from './models/User.js'
+import UserModel from './models/User.js';
+import checkAuth from "./utils/checkAuth.js";
 
 
 mongoose
@@ -61,14 +62,14 @@ app.post('/auth/register', registerValidation, async (req, res) => {
 app.post('/auth/login', async (req, res) => {
     try {
         const user = await UserModel.findOne({email: req.body.email});
-        if(!user) {
+        if (!user) {
             return res.status(404).json({
                 message: 'User not found.'
             });
         }
 
         const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash)
-        if(!isValidPass) {
+        if (!isValidPass) {
             return res.status(400).json({
                 message: 'Invalid login or password'
             });
@@ -85,6 +86,25 @@ app.post('/auth/login', async (req, res) => {
         console.log(err)
         res.status(500).json({
             message: 'Authorisation failed.'
+        })
+    }
+})
+
+app.get('/auth/me', checkAuth, async (req, res) => {
+    try {
+        const user = await UserModel.findOne(req.userId)
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        const {passwordHash, ...userData} = user._doc
+        res.json(userData)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Something go wrong.'
         })
     }
 })
