@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import {registerValidation, loginValidation} from "./validators/auth.js";
 import checkAuth from "./utils/checkAuth.js";
 import * as UserController from "./controllers/UserController.js";
+import * as PostController from "./controllers/PostController.js";
+import {postCreateValidation} from "./validators/post.js";
 
 
 mongoose
@@ -25,3 +27,9 @@ app.listen(4444, (err) => {
 app.post('/auth/register', registerValidation, UserController.register)
 app.post('/auth/login', loginValidation, UserController.login)
 app.get('/auth/me', checkAuth, UserController.getMe)
+
+app.post('/posts', checkAuth, postCreateValidation, PostController.create)
+//app.get('/posts', PostController.getAll)
+//app.get('/posts/:id', PostController.getOne)
+//app.delete('/posts', PostController.remove)
+//app.post('/posts', PostController.update)
