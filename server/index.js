@@ -29,7 +29,7 @@ app.post('/auth/login', loginValidation, UserController.login)
 app.get('/auth/me', checkAuth, UserController.getMe)
 
 app.post('/posts', checkAuth, postCreateValidation, PostController.create)
-//app.get('/posts', PostController.getAll)
+app.get('/posts', checkAuth, PostController.getAll)
 //app.get('/posts/:id', PostController.getOne)
 //app.delete('/posts', PostController.remove)
 //app.post('/posts', PostController.update)
