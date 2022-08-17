@@ -7,7 +7,7 @@ export const create = async (req, res) => {
             text: req.body.text,
             imageUrl: req.body.imageUrl,
             tags: req.body.tags,
-            author: req.userId,
+            user: req.userId,
         });
         const post = await doc.save()
         res.json(post)
@@ -21,7 +21,7 @@ export const create = async (req, res) => {
 
 export const getAll = async (req,res) => {
     try {
-        const posts = await PostModel.find()
+        const posts = await PostModel.find().populate('user').exec()
         res.json(posts)
     } catch (err) {
         console.log(err)
