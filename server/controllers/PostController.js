@@ -32,7 +32,7 @@ export const getOne = async (req, res) => {
             if (err) {
                 console.log(err)
                 return res.status(500).json({
-                    message: 'Couldn\'t get a article.'
+                    message: 'Couldn\'t get an article.'
                 })
             }
 
@@ -74,7 +74,7 @@ export const remove = async (req, res) => {
             if (err) {
                 console.log(err)
                 return res.status(500).json({
-                    message: 'Couldn\'t delete a article.'
+                    message: 'Couldn\'t delete an article.'
                 })
             }
 
@@ -89,7 +89,32 @@ export const remove = async (req, res) => {
     } catch (err) {
         console.log(err)
         res.status(500).json({
-            message: 'Couldn\'t get a article'
+            message: 'Couldn\'t get an article'
+        })
+    }
+}
+
+export const update = async (req,res) =>{
+    try {
+        const postId = req.params.id
+
+        await PostModel.updateOne({
+            _id: postId
+        },{
+            title: req.body.title,
+            text: req.body.text,
+            imageUrl: req.body.imageUrl,
+            tags: req.body.tags,
+            user: req.userId,
+        })
+
+        res.json({
+            success: true
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Couldn\'t update an article'
         })
     }
 }
