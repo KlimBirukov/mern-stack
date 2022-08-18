@@ -19,7 +19,7 @@ export const create = async (req, res) => {
     }
 }
 
-export const getOne = async (req,res) => {
+export const getOne = async (req, res) => {
     try {
         const postId = req.params.id;
         PostModel.findOneAndUpdate({
@@ -28,15 +28,15 @@ export const getOne = async (req,res) => {
             $inc: {viewsCount: 1},
         }, {
             returnDocument: 'after'
-        }, (err,doc) =>{
-            if(err){
+        }, (err, doc) => {
+            if (err) {
                 console.log(err)
                 return res.status(500).json({
                     message: 'Couldn\'t get a article.'
                 })
             }
 
-            if(!doc) {
+            if (!doc) {
                 return res.status(404).json({
                     message: 'Article not found.'
                 })
@@ -52,7 +52,7 @@ export const getOne = async (req,res) => {
     }
 }
 
-export const getAll = async (req,res) => {
+export const getAll = async (req, res) => {
     try {
         const posts = await PostModel.find().populate('user').exec()
         res.json(posts)
@@ -60,6 +60,36 @@ export const getAll = async (req,res) => {
         console.log(err)
         res.status(500).json({
             message: 'Couldn\'t get all articles'
+        })
+    }
+}
+
+export const remove = async (req, res) => {
+    try {
+        const postId = req.params.id
+
+        PostModel.findOneAndDelete({
+            _id: postId
+        }, (err, doc) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({
+                    message: 'Couldn\'t delete a article.'
+                })
+            }
+
+            if (!doc) {
+                return res.status(404).json({
+                    message: 'Article not found.'
+                })
+            }
+
+            res.json({success: true})
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Couldn\'t get a article'
         })
     }
 }
