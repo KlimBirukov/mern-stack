@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from "mongoose";
+import multer from 'multer'
 
 import {registerValidation, loginValidation} from "./validators/auth.js";
 import checkAuth from "./utils/checkAuth.js";
@@ -24,6 +25,18 @@ app.listen(4444, (err) => {
     console.log('Server is working.')
 })
 
+
+const storage = multer.diskStorage({
+    destination: (_, __, callback) => {
+        callback(null, 'uploads')
+    },
+    filename: (_, file, callback) => {
+        callback(null, file.originalname)
+    },
+})
+const upload = multer({storage})
+
+
 app.post('/auth/register', registerValidation, UserController.register)
 app.post('/auth/login', loginValidation, UserController.login)
 app.get('/auth/me', checkAuth, UserController.getMe)
@@ -32,4 +45,12 @@ app.post('/posts', checkAuth, postCreateValidation, PostController.create)
 app.get('/posts', checkAuth, PostController.getAll)
 app.get('/posts/:id', checkAuth, PostController.getOne)
 app.delete('/posts/:id', checkAuth, PostController.remove)
-app.patch('/posts/:id', checkAuth, PostController.update)
+app.patch('/posts/:id', checkAuth, postCreateValidation, PostController.update)
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+    res.json({
+        url: `/uploads/${req.file.originalname}`,
+    })
+})
+app.use('/uploads', express.static('uploads'))
+
